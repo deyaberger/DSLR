@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 from IPython.display import display
-import random
 
 class Feature:
     def __init__(self, name, dataset):
@@ -47,7 +46,7 @@ def init_describe_df(list_params):
 
 def parse_arguments(args):
     ### TODO : parse arguments
-    dataset_name = "datasets/dataset_test.csv"
+    dataset_name = "test.csv"
     list_params = ["count", "mean", "std", "min", "25%", "50%", "75%", "max"]
     return(dataset_name, list_params)
 
@@ -64,9 +63,20 @@ def fill_output_df(input_df, output_df, list_params):
             feature = Feature(feature_name, dataset)
             output_df[feature_name] = feature.infos
 
+def read_csv(dataset_name):
+    try:
+        df = pd.read_csv(dataset_name)
+        return (df)
+    except FileNotFoundError:
+        print(f"No such file or directory: '{dataset_name}'")
+    except pd.errors.EmptyDataError:
+        print(f"No columns to parse from file: '{dataset_name}'")
+    return (None)
+
 if __name__ == "__main__":
     dataset_name, list_params = parse_arguments(None)
-    input_df = pd.read_csv(dataset_name)
-    output_df = init_describe_df(list_params)
-    fill_output_df(input_df, output_df, list_params)
-    display(output_df)
+    input_df = read_csv(dataset_name)
+    if input_df:
+        output_df = init_describe_df(list_params)
+        fill_output_df(input_df, output_df, list_params)
+        display(output_df)
