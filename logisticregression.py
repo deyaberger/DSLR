@@ -89,15 +89,17 @@ class LogisticRegression:
             self.read_csv(datafile)
         self.activation = sigmoid
 
-    def read_csv(self, datafile):
+    def read_csv(self, datafile, fill = True):
         ''' Reading our Training data
+        Features: only numeric values (not taking in account the names of the students for example)
         X will be our matrix of students and their grades the different subjects
         y will be the houses of these students
         For each missing values in grades, we replace it by the median grade of all students
         '''
         try:
             df = pd.read_csv(datafile)
-            df.fillna(df.median(), inplace = True)
+            if fill == True:
+                df.fillna(df.median(), inplace = True)
             features = list(df.columns[6:])
             self.X = df[features].to_numpy()
             one_hot_encoding = pd.get_dummies(df["Hogwarts House"], drop_first = False)

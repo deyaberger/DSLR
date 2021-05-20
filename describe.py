@@ -46,7 +46,7 @@ def init_describe_df(list_params):
 
 def parse_arguments(args):
     ### TODO : parse arguments
-    dataset_name = "test.csv"
+    dataset_name = "datasets/dataset_train.csv"
     list_params = ["count", "mean", "std", "min", "25%", "50%", "75%", "max"]
     return(dataset_name, list_params)
 
