@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 
-steps = 30
+steps = 100
 test_size = 0.3
 learning_rate = 0.1
 validate = True
@@ -100,7 +100,7 @@ class LogisticRegression:
             df = pd.read_csv(datafile)
             if fill == True:
                 df.fillna(df.median(), inplace = True)
-            features = list(df.columns[6:])
+            features = list(df.columns[6:]) ### TODO: rajouter option features
             self.X = df[features].to_numpy()
             one_hot_encoding = pd.get_dummies(df["Hogwarts House"], drop_first = False)
             self.houses = list(one_hot_encoding.columns)
@@ -191,5 +191,9 @@ if __name__ == "__main__":
     model.fit(score)
     if validate == True:
         score.show_graph("F1_score", score.iterations, score.F1_score_total)
-    ### TODO: validate (X_test, y test), verbose, options: choose features, chose activation function, choose iter, LR, split.
+    ### TODO: Parsing arguments: option de choose la/les features + choose Learning rate + choose iterations + graph ou pas graph
+    ### TODO: Indicateur features utiles + Calcul et plot de la fonction de cout
+    ### TODO: gestion d'erreur
+    ### TODO: Fonction de prediction + ameliorer describe
+
  
