@@ -7,9 +7,12 @@ def parse_arguments():
     parser.add_argument('-f', '--full_display', help='display all rows of the describe dataframe', action='store_true')
     parser.add_argument('-s', '--save', help='save the info of describe in a csv file', action='store_true')
     parser.add_argument('-q', '--quartile', help='Calculate additional quartiles', action = 'append', type = int, choices = list(range(0, 101)))
+    parser.add_argument('-skw', '--skewness', help='Calculate skewness', action = 'store_true')
     args = parser.parse_args()
     args.list_params = ["count", "mean", "std", "min", "25%", "50%", "75%", "max"]
-    if args.quartile:
+    if args.skewness == True:
+        args.list_params.append("skw")
+    if args.quartile != None:
         for q in args.quartile:
             name = str(q) + "%"
             args.list_params.append(name)
@@ -17,7 +20,7 @@ def parse_arguments():
 
 if __name__ == "__main__":
     args = parse_arguments()
-    print(args.quartile)
+    print(args.list_params)
     describe = Describe(args)
     if args.full_display == True:
         print(describe.output_df.to_string())

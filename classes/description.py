@@ -7,6 +7,7 @@ class Feature:
         self.count = len(X)
         if self.count != 0:
             self.mean = sum(X) / self.count
+        self.std = self.calc_std()
         self.calculate_parameters(list_params)
 
     def calculate_parameters(self, list_params):
@@ -17,21 +18,29 @@ class Feature:
             elif parameter == "mean":
                 self.y[i] += self.mean
             elif parameter == "std":
-                self.y[i] += self.calc_std()
+                self.y[i] += self.std
             elif parameter == "min":
                 self.y[i] += self.X[0]
             elif parameter == "max":
                 self.y[i] += self.X[-1]
+            elif parameter == "skw":
+                self.y[i] += self.calc_skw()
             else:
                 try:
                     quartile = int(parameter[:parameter.find("%")])
                     self.y[i] += self.calc_percentiles(quartile)
                 except:
+                    print(parameter)
                     print("issue while converting quartile")
     
+
     def calc_std(self):
-        std = ((sum(np.square(self.X - self.mean))) / (self.count - 1)) ** 0.5
+        std = ((sum((self.X - self.mean) ** 2)) / (self.count - 1)) ** 0.5
         return std
+    
+    def calc_skw(self):
+        skw = sum(((self.X - self.mean) / self.std) ** 3) / (self.count - 1)
+        return skw
     
     def calc_percentiles(self, quartile):
         position_floaty = (float(quartile) / 100) * (self.count - 1)
