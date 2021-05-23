@@ -23,7 +23,7 @@ if __name__ == "__main__":
     model.init_weights()
     score = ModelEvaluation()
     model.fit(score)
-    model.save_weights()
+    model.save_weights("weights.pkl")
     if args.plot == True:
         score.show_graph("F1_score", score.iterations, score.F1_score_total)
     ### TODO: Parsing arguments: option de choose la/les features
