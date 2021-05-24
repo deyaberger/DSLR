@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from pandas import errors
+from scipy.sparse import data
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import sys
@@ -83,7 +84,10 @@ class LogisticRegression:
     def __init__(self, args = None, train = True):
         self.args = args
         self.read_csv(self.args.datafile, train)
-        self.activation = self.sigmoid
+        if self.args.activation == "softmax":
+            self.activation = self.softmax
+        else:
+            self.activation = self.sigmoid
     
     def check_input(self, df, features, train):
         if features == []:
@@ -106,6 +110,8 @@ class LogisticRegression:
         For each missing values in grades, we replace it by the median grade of all students
         '''
         try:
+            if self.args.verbose == 1:
+                print("- Reading CSV file -\n")
             df = pd.read_csv(datafile)
             df.fillna(df.median(), inplace = True)
             self.features = list(df.columns[6:]) ### TODO change features
@@ -123,6 +129,8 @@ class LogisticRegression:
         '''
         Scaling our data so the mean of each feature will be 0 - helps to converge faster
         '''
+        if self.args.verbose == 1:
+            print("- Feature Scaling our data -\n")
         self.scaler = StandardScaler()
         self.scaler.fit(self.X)
         self.X = self.scaler.transform(self.X)
@@ -133,22 +141,32 @@ class LogisticRegression:
         So that we can have theta0 as our bias:
         theta0 * 1 + theta1 * feature1 + theta2 * feature2 etc...
         '''
+        if self.args.verbose == 1:
+            print("- Adding bias units to the Matrix of data -\n")
         bias_units = np.ones((self.X.shape[0], 1))
         self.X = np.concatenate((bias_units, self.X), axis = 1)
     
     def split_data(self):
         ''' Splitting our data in a training set and a testing set, so when we calculate our score, we avoid bias and overfitting
         '''
+        if self.args.verbose == 1:
+            print(f"- Splitting our data into a training and a testing set _ training set = [{round(self.args.train_size * 100)}%], test_set = [{round((1 - self.args.train_size) * 100)}] -\n")
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X, self.y, train_size=self.args.train_size, random_state=42)
     
     def init_weights(self):
         ''' Initializing our thetas to 0
         '''
+        if self.args.verbose == 1:
+            print("- Initializing all our weights (thetas) to 0 -\n")
         self.thetas = np.zeros((self.X_train.shape[1], self.y_train.shape[1]))
     
 
-    def sigmoid(self, x):
-        ret = 1 / (1 + np.exp(-x))
+    def sigmoid(self, z):
+        ret = 1 / (1 + np.exp(-z))
+        return(ret)
+    
+    def softmax(self, z):
+        ret = np.exp(z) / sum(np.exp(z))
         return(ret)
 
     def hypothesis(self, X):
@@ -168,12 +186,22 @@ class LogisticRegression:
         '''
         error = self.H - y
         self.loss_gradient = np.matmul(X.T, error) / len(X)
-
+    
     def gradient_descent(self):
         '''
         Changes the values of the thetas according to the derivative of our cost function
         '''
         self.thetas = self.thetas - (self.args.learning_rate * self.loss_gradient)
+    
+    def choose_stochastic_batch(self, X, y, batch_size = 10):
+        datasize = X.shape[0]
+        if batch_size > datasize:
+            batch_size = datasize
+        mask = np.random.choice(datasize, batch_size, replace = False)
+        X = X[mask]
+        y = y[mask]
+        return X, y
+        
     
     def predict(self, y, i):
         '''
@@ -187,13 +215,26 @@ class LogisticRegression:
         '''
         Calculate our predictions, then compute loss gradient according to our error
         '''
+        if self.args.verbose == 1:
+            print(f"- Fitting our model to minimize our cost and find the best values for out thetas: -")
+            print(f"nb of iterations = [{self.args.steps}]\nactivation function = [{self.args.activation}]\nstochastic gradient descent = [{self.args.stochastic}]\n")
         for i in range(self.args.steps):
             score.evaluate(self, i, self.X_test, self.y_test)
-            self.hypothesis(self.X_train)
-            self.compute_loss_gradient(self.X_train, self.y_train)
+            X, y = self.X_train, self.y_train
+            if i == 0 and self.args.verbose == 1:
+                print(f"--> Before training:\naverage F1_score = {round(np.mean(score.F1_score) * 100)}\naverage accuracy = {round(np.mean(score.accuracy) * 100)}\n")
+            if self.args.stochastic == True:
+                X, y = self.choose_stochastic_batch(X, y)
+            self.hypothesis(X)
+            self.compute_loss_gradient(X, y)
             self.gradient_descent()
+        if self.args.verbose == 1:
+            print(f"--> After training:\naverage F1_score = {round(np.mean(score.F1_score) * 100)}\naverage accuracy = {round(np.mean(score.accuracy) * 100)}\n")
+            
     
     def save_weights(self, file_name):
+        if self.args.verbose == 1:
+            print(f"- Saving our weights, scaling info and houses name into a file cald {file_name} -\n")
         info = {"thetas" : self.thetas, "scaler" : self.scaler, "houses" : self.houses}
         with open(file_name, "wb") as f:
             pickle.dump(info, f)

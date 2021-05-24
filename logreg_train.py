@@ -4,12 +4,14 @@ import argparse
 def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('datafile', help='.csv file containing the data to train the model')
-    parser.add_argument('-v', '--verbose', help='increase output verbosity', type=int, default=0)
+    parser.add_argument('-v', '--verbose', help='increase output verbosity', type=int, default=0, choices = [0, 1])
+    parser.add_argument('-a', '--activation', help='Choose activation function', type=str, default="sigmoid", choices = ["sigmoid", "softmax"])
     parser.add_argument('-lr', '--learning_rate', help='[default = 0.01]', type=float, default=0.01)
     parser.add_argument('-st', '--steps', help='[default = 100]', type=int, default=100)
     parser.add_argument('-tr', '--train_size', help='percentage of the dataset to generate the train dataset [default = 0.7]', type=float, default=0.7)
     parser.add_argument('-f', '--choose_features', help='train logistic model with chosen features', action='store_true')
     parser.add_argument('-p', '--plot', help='display F1 score', action='store_true')
+    parser.add_argument('-sch', '--stochastic', help='Compute stochastic gradient descent', action='store_true')
     args = parser.parse_args()
     return (args)
 
@@ -29,6 +31,4 @@ if __name__ == "__main__":
     ### TODO: Parsing arguments: option de choose la/les features
     ### TODO: Indicateur features utiles + Calcul et plot de la fonction de cout
     ### TODO: gestion d'erreur
-    ### TODO: Fonction de prediction + ameliorer describe
-
  
