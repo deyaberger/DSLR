@@ -35,23 +35,22 @@ class ModelEvaluation:
 		Accuracy: proportion of correct predictions over total predictions.
 		F1 Score: the harmonic mean of the model s precision and recall.
 		'''
-		### TODO: addition de tout ???
 		self.precision = self.my_divide(self.true_positive, (self.true_positive + self.false_positive))
 		self.sensitivity = self.my_divide(self.true_positive, (self.true_positive + self.false_negative))
 		self.specificity = self.my_divide(self.true_negative, (self.true_negative + self.false_positive))
 		self.accuracy = self.my_divide((self.true_positive + self.true_negative), (self.true_positive + self.true_negative + self.false_positive + self.false_negative))
 		self.F1_score = (2 * (self.my_divide((self.precision * self.sensitivity), (self.precision + self.sensitivity))))
 	
-	def save_evolution(self, steps):
+	def save_evolution(self, epochs):
 		''' Saving all values of our kpis during each call to the evaluate function, to display them in the graphs '''
 		self.precision_total.append(np.mean(self.precision) * 100)
 		self.sensitivity_total.append(np.mean(self.sensitivity) * 100)
 		self.specificity_total.append(np.mean(self.specificity) * 100)
 		self.accuracy_total.append(np.mean(self.accuracy) * 100)
 		self.F1_score_total.append(np.mean(self.F1_score) * 100)
-		self.iterations.append(steps)
+		self.iterations.append(epochs)
 
-	def evaluate(self, model, steps, X, y):
+	def evaluate(self, model, epochs, X, y):
 		'''
 		Calculating different type of KPIs to evaluate the performance of our model and its evolution
 		'''
@@ -67,10 +66,9 @@ class ModelEvaluation:
 				self.false_positive[predicted_house] += 1
 				self.false_negative[real_house] += 1
 		self.calculate_kpi()
-		self.save_evolution(steps)
+		self.save_evolution(epochs)
 
 	def my_divide(self, a, b):
-		### TODO : gerer 0 pour a et pour b - matrice pas inversibles
 		result = np.divide(a, b, out=np.zeros_like(a), where=b!=0)
 		return(result)
 
@@ -202,7 +200,7 @@ class LogisticRegression:
 		'''
 		self.thetas = self.thetas - (self.args.learning_rate * self.loss_gradient)
 	
-	def choose_stochastic_batch(self, X, y, batch_size = 10):
+	def choose_stochastic_batch(self, X, y, batch_size = 1):
 		datasize = X.shape[0]
 		if batch_size > datasize:
 			batch_size = datasize
@@ -226,13 +224,17 @@ class LogisticRegression:
 		'''
 		if self.args.verbose == 1:
 			print(f"- Fitting our model to minimize our cost and find the best values for out thetas: -")
-			print(f"nb of iterations = [{self.args.steps}]\nactivation function = [{self.args.activation}]\nstochastic gradient descent = [{self.args.stochastic}]\n")
-		for i in range(self.args.steps):
+			print(f"nb of iterations = [{self.args.epochs}]\nactivation function = [{self.args.activation}]\nstochastic gradient descent = [{self.args.stochastic}]\n")
+		F1_convergence, acc_convergence = 0, 0
+		for i in range(self.args.epochs):
 			score.evaluate(self, i, self.X_test, self.y_test)
 			X, y = self.X_train, self.y_train
-			#print(self.H)
 			if i == 0 and self.args.verbose == 1:
 				print(f"--> Before training:\naverage F1_score = {round(np.mean(score.F1_score) * 100)}\naverage accuracy = {round(np.mean(score.accuracy) * 100)}\n")
+			if F1_convergence == 0 and np.mean(score.F1_score) >= 0.98:
+				F1_convergence = i
+			if acc_convergence == 0 and np.mean(score.accuracy) >= 0.98:
+				acc_convergence = i
 			if self.args.stochastic == True:
 				X, y = self.choose_stochastic_batch(X, y)
 			self.hypothesis(X)
@@ -240,6 +242,11 @@ class LogisticRegression:
 			self.gradient_descent()
 		if self.args.verbose == 1:
 			print(f"--> After training:\naverage F1_score = {round(np.mean(score.F1_score) * 100)}\naverage accuracy = {round(np.mean(score.accuracy) * 100)}\n")
+			if F1_convergence != 0:
+				print(f"average F1 score superior to 0.98 after {F1_convergence} epochs\n")
+			if acc_convergence != 0:
+				print(f"average accuracy superior to 0.98 after {acc_convergence} epochs\n")
+
 			
 	
 	def save_weights(self, file_name):
