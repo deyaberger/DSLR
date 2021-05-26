@@ -121,7 +121,7 @@ class LogisticRegression:
 				for i in self.args.features:
 					self.features.append(df.columns[i + 6])
 			else:
-				self.features = list(df.columns[6:])
+				self.features = self.args.features
 			if self.args.verbose == 1:
 				print(f'-list of features used for logical regression :\n{self.features}\n')
 			self.X = df[self.features].to_numpy()
@@ -245,7 +245,7 @@ class LogisticRegression:
 	def save_weights(self, file_name):
 		if self.args.verbose == 1:
 			print(f"- Saving our weights, scaling info and houses name into a file cald {file_name} -\n")
-		info = {"thetas" : self.thetas, "scaler" : self.scaler, "houses" : self.houses}
+		info = {"thetas" : self.thetas, "scaler" : self.scaler, "houses" : self.houses, "features" : self.features}
 		with open(file_name, "wb") as f:
 			pickle.dump(info, f)
 

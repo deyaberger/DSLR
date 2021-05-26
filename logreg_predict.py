@@ -1,4 +1,5 @@
 from classes.logisticregression import LogisticRegression, ModelEvaluation
+from classes.test import TestHouses
 import argparse
 import pickle
 
@@ -17,14 +18,25 @@ def get_weights(file, model):
 	model.thetas = info["thetas"]
 	model.scaler = info["scaler"]
 	model.houses = info["houses"]
-	
+
+def get_features(file):
+	with open (file, "rb") as f:
+		info = pickle.load(f)
+	return(info["features"])
 	
 if __name__ == "__main__":
 	args = parse_arguments()
+	args.features = get_features(args.weights)
 	model = LogisticRegression(args, train = False)
 	get_weights(args.weights, model)
 	model.feature_scale_normalise()
 	model.add_bias_units()
 	model.hypothesis(model.X)
 	model.save_predictions("houses.csv")
+	if args.test:
+		args.houses = model.houses
+		args.thetas = model.thetas
+		test = TestHouses(args)
+		test.launch_test()
+
 ## TODO : titres plos, steps = epochs, performance en fonction epochs
