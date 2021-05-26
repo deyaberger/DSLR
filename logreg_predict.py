@@ -17,7 +17,9 @@ def get_weights(file, model):
 	model.thetas = info["thetas"]
 	model.scaler = info["scaler"]
 	model.houses = info["houses"]
-	
+	model.features = info["features"]
+
+
 	
 if __name__ == "__main__":
 	args = parse_arguments()
