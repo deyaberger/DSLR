@@ -35,6 +35,7 @@ class ModelEvaluation:
 		Accuracy: proportion of correct predictions over total predictions.
 		F1 Score: the harmonic mean of the model s precision and recall.
 		'''
+		### TODO: addition de tout ???
 		self.precision = self.my_divide(self.true_positive, (self.true_positive + self.false_positive))
 		self.sensitivity = self.my_divide(self.true_positive, (self.true_positive + self.false_negative))
 		self.specificity = self.my_divide(self.true_negative, (self.true_negative + self.false_positive))
@@ -69,6 +70,7 @@ class ModelEvaluation:
 		self.save_evolution(steps)
 
 	def my_divide(self, a, b):
+		### TODO : gerer 0 pour a et pour b - matrice pas inversibles
 		result = np.divide(a, b, out=np.zeros_like(a), where=b!=0)
 		return(result)
 
@@ -121,7 +123,7 @@ class LogisticRegression:
 			else:
 				self.features = list(df.columns[6:])
 			if self.args.verbose == 1:
-				print('-list of features used for logical regression :\n', self.features)
+				print(f'-list of features used for logical regression :\n{self.features}\n')
 			self.X = df[self.features].to_numpy()
 			one_hot_encoding = pd.get_dummies(df["Hogwarts House"], drop_first = False)
 			self.houses = list(one_hot_encoding.columns)

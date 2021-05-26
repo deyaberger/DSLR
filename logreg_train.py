@@ -9,7 +9,7 @@ def parse_arguments():
 	parser.add_argument('-lr', '--learning_rate', help='[default = 0.01]', type=float, default=0.01)
 	parser.add_argument('-st', '--steps', help='[default = 100]', type=int, default=100)
 	parser.add_argument('-tr', '--train_size', help='percentage of the dataset to generate the train dataset [default = 0.7]', type=float, default=0.7)
-	parser.add_argument('-f', '--features', help='train logistic model with chosen features :\n\n0_Arithmancy, 1_Astronomy, 2_Herbology, 3_Defense against the Dark Arts, 4_Divination, 5_Muggle Studies, 6_Ancient Runes, 7_History of Magic, 8_Transfiguration, 9_Potions, 10_Care of Magical Creatures, 11_Charms, 12_Flying', nargs='+', default=[0,1,2,3,4,5,6,7,8,9,10,11,12], type=int)
+	parser.add_argument('-f', '--features', help='train logistic model with chosen features : 0 = Arithmancy\, 1 = Astronomy, 2 = Herbology, 3_Defense against the Dark Arts, 4_Divination, 5_Muggle Studies, 6_Ancient Runes, 7_History of Magic, 8_Transfiguration, 9_Potions, 10_Care of Magical Creatures, 11_Charms, 12_Flying', nargs='+', default=[0,1,2,3,4,5,6,7,8,9,10,11,12], type=int)
 	parser.add_argument('-c', '--coefficients', help='display coefficents value', action='store_true')
 	parser.add_argument('-p', '--plot', help='display F1 score', action='store_true')
 	parser.add_argument('-sch', '--stochastic', help='Compute stochastic gradient descent', action='store_true')
