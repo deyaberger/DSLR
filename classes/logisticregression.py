@@ -240,6 +240,8 @@ class LogisticRegression:
 			self.hypothesis(X)
 			self.compute_loss_gradient(X, y)
 			self.gradient_descent()
+			if (i == 98):
+				print(self.H)
 		if self.args.verbose == 1:
 			print(f"--> After training:\naverage F1_score = {round(np.mean(score.F1_score) * 100)}\naverage accuracy = {round(np.mean(score.accuracy) * 100)}\n")
 			if F1_convergence != 0:
