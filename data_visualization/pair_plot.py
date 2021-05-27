@@ -37,4 +37,5 @@ def main():
     plt.show()
 
 if __name__ == '__main__':
+    ### TODO: titres + question sur plots, label des axes, datafile en argument, parsing arguments, gestion d'erreur arguments
     main()

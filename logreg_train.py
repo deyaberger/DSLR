@@ -24,7 +24,7 @@ def parse_arguments():
 	parser.add_argument('-sch', '--stochastic', help='Compute stochastic gradient descent', action='store_true')
 	parser.add_argument('-ep', '--epochs', help='Number of iterations, must be between 1 and 500, [default = 100]', type=int, default=100)
 	parser.add_argument('-tr', '--train_size', help='percentage of the dataset to generate the train dataset [default = 0.7], must be between 0.10 and 0.90', type=float, default=0.7)
-	parser.add_argument('-f', '--features', help='train logistic model with chosen features : 0 = Arithmancy, 1 = Astronomy, 2 = Herbology, 3 = Defense against the Dark Arts, 4 = Divination, 5 = Muggle Studies, 6 = Ancient Runes, 7 = History of Magic, 8 = Transfiguration, 9 = Potions, 10 = Care of Magical Creatures, 11 = Charms, 12 = Flying', nargs='+', default = list(range(0, 13)), type=int)
+	parser.add_argument('-f', '--features', help='train logistic model with chosen features : 0 = Arithmancy, 1 = Astronomy, 2 = Herbology, 3 = Defense against the Dark Arts, 4 = Divination, 5 = Muggle Studies, 6 = Ancient Runes, 7 = History of Magic, 8 = Transfiguration, 9 = Potions, 10 = Care of Magical Creatures, 11 = Charms, 12 = Flying', nargs='+', default = [2,3,4,5,6,7,8,9,11,12], type=int)
 	parser.add_argument('-p', '--plot', help='display F1 score and cost function', action='store_true')
 	args = parser.parse_args()
 	check_min_max(args)

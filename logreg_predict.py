@@ -1,5 +1,4 @@
-from classes.logisticregression import LogisticRegression, ModelEvaluation
-from classes.test import TestHouses
+from classes import LogisticRegression, ModelEvaluation, TestHouses
 import argparse
 import pickle
 import sys
@@ -12,7 +11,7 @@ def parse_arguments():
 	parser = argparse.ArgumentParser()
 	parser.add_argument('datafile', help='.csv file containing the data to test the model', type=str)
 	parser.add_argument('weights', help='.pkl file containing the weights to predict the results', type=str)
-	parser.add_argument('-t', '--test', help='Find out your house, requires as argument name of a csv file of student notes for reference', type=str)
+	parser.add_argument('-f', '--find', help='Find out your house, requires as argument name of a csv file of student notes for reference', type=str)
 	parser.add_argument('-v', '--verbose', help='increase output verbosity', type=int, default=0, choices = [0, 1])
 	args = parser.parse_args()
 	if not args.datafile.endswith(".csv"):
@@ -39,16 +38,17 @@ if __name__ == "__main__":
 	args = parse_arguments()
 	structure = get_model_structure(args.weights)
 	args.activation = structure["activation"]
+	args.features = structure["features"]
 	model = LogisticRegression(args, train = False)
 	get_weights(structure, model)
 	model.feature_scale_normalise()
 	model.add_bias_units()
 	model.hypothesis(model.X)
 	model.save_predictions("houses.csv")
-	if args.test:
+	if args.find:
 		args.houses = model.houses
 		args.thetas = model.thetas
-		test = TestHouses(args)
-		test.launch_test()
+		find = TestHouses(args)
+		find.launch_test()
 
 ## TODO : titres plos, steps = epochs, performance en fonction epochs

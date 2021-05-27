@@ -6,7 +6,7 @@ def parse_arguments():
     parser.add_argument('datafile', help='.csv file containing the data to describe')
     parser.add_argument('-f', '--full_display', help='display all rows of the describe dataframe', action='store_true')
     parser.add_argument('-s', '--save', help='save the info of describe in a csv file', action='store_true')
-    parser.add_argument('-q', '--quartile', help='Calculate additional quartiles', action = 'append', type = int, choices = list(range(0, 101)))
+    parser.add_argument('-q', '--quartile', help='Calculate additional quartiles', action = 'append', type = int)
     parser.add_argument('-skw', '--skewness', help='Calculate skewness', action = 'store_true')
     args = parser.parse_args()
     args.list_params = ["count", "mean", "std", "min", "25%", "50%", "75%", "max"]
@@ -19,6 +19,7 @@ def parse_arguments():
     return (args)
 
 if __name__ == "__main__":
+     ## TODO : choices quartiles, max min et liste, exit pour msg d'erreur 
     args = parse_arguments()
     describe = Describe(args)
     if args.full_display == True:

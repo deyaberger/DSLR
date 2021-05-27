@@ -1,12 +1,17 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-from pandas import errors
-from scipy.sparse import data
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
 import sys
-import pickle
+try:
+	import pandas as pd
+	import matplotlib.pyplot as plt
+	import numpy as np
+	from pandas import errors
+	from scipy.sparse import data
+	from sklearn.model_selection import train_test_split
+	from sklearn.preprocessing import StandardScaler
+	import pickle
+except ModuleNotFoundError as e:
+	print(e)
+	print("Please launch python -r requirements.txt")
+	sys.exit()
 
 def display_error(msg):
 	print(msg)
@@ -197,6 +202,10 @@ class LogisticRegression:
 		self.thetas = self.thetas - (self.args.learning_rate * self.loss_gradient)
 	
 	def choose_stochastic_batch(self, X, y, batch_size = 1):
+		'''
+		Take one datapoints to calculate gradient descent
+		If batch_size > 1 : it is called a mini batch gradient descent
+		'''
 		datasize = X.shape[0]
 		if batch_size > datasize:
 			batch_size = datasize
@@ -216,6 +225,9 @@ class LogisticRegression:
 
 	
 	def calculate_cost(self, X, y):
+		'''
+		Cross Entropy cost function
+		'''
 		ylogh = y * np.log(self.H)
 		losses = np.sum(ylogh, axis = 1, keepdims = True)
 		self.cost = -1.0 * (np.mean(losses))
@@ -250,7 +262,7 @@ class LogisticRegression:
 	def save_weights(self, file_name):
 		if self.args.verbose == 1:
 			print(f"- Saving our weights, scaling info and houses name into a file called {file_name} -\n")
-		info = {"thetas" : self.thetas, "houses" : self.houses, "features" : self.features}
+		info = {"thetas" : self.thetas, "houses" : self.houses, "features" : self.features, "activation" : self.args.activation}
 		with open(file_name, "wb") as f:
 			pickle.dump(info, f)
 
