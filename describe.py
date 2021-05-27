@@ -1,4 +1,4 @@
-from classes.description import Describe
+from classes import Describe
 import argparse
 
 def parse_arguments():
@@ -20,7 +20,6 @@ def parse_arguments():
 
 if __name__ == "__main__":
     args = parse_arguments()
-    print(args.list_params)
     describe = Describe(args)
     if args.full_display == True:
         print(describe.output_df.to_string())

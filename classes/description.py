@@ -4,31 +4,34 @@ import numpy as np
 class Feature:
     def __init__(self, X, list_params):
         self.X = sorted(X)
+        self.y = np.zeros((len(list_params), 1))
         self.count = len(X)
         if self.count != 0:
             self.mean = sum(X) / self.count
-        self.std = self.calc_std()
+            self.std = self.calc_std()
         self.calculate_parameters(list_params)
+        
 
     def calculate_parameters(self, list_params):
-        self.y = np.zeros((len(list_params), 1))
         for i, parameter in enumerate(list_params):
             if parameter == "count":
-                self.y[i] += self.count
+                self.y[i] = self.count
+            elif parameter != "count" and self.count == 0:
+                self.y[i] = np.NaN
             elif parameter == "mean":
-                self.y[i] += self.mean
+                self.y[i] = self.mean
             elif parameter == "std":
-                self.y[i] += self.std
+                self.y[i] = self.std
             elif parameter == "min":
-                self.y[i] += self.X[0]
+                self.y[i] = self.X[0]
             elif parameter == "max":
-                self.y[i] += self.X[-1]
+                self.y[i] = self.X[-1]
             elif parameter == "skw":
-                self.y[i] += self.calc_skw()
+                self.y[i] = self.calc_skw()
             else:
                 try:
                     quartile = int(parameter[:parameter.find("%")])
-                    self.y[i] += self.calc_percentiles(quartile)
+                    self.y[i] = self.calc_percentiles(quartile)
                 except:
                     print(parameter)
                     print("issue while converting quartile")
