@@ -1,5 +1,10 @@
 import pandas as pd
 import numpy as np
+import sys
+
+def display_error(msg):
+	print(msg)
+	sys.exit()
 
 class Feature:
     def __init__(self, X, list_params):
@@ -37,8 +42,7 @@ class Feature:
                     quartile = int(parameter[:parameter.find("%")])
                     self.y[i] = self.calc_percentiles(quartile)
                 except:
-                    print(parameter)
-                    print("issue while converting quartile")
+                    display_error("issue while converting quartile")
     
 
     def calc_std(self):
@@ -95,9 +99,9 @@ class Describe:
             if len(df) == 0:
                 self.handle_empty(df)
         except FileNotFoundError:
-            print(f"No such file or directory: '{datafile}'")
+            display_error(f"No such file or directory: '{datafile}'")
         except pd.errors.EmptyDataError:
-            print(f"No columns to parse from file: '{datafile}'")
+            display_error(f"No columns to parse from file: '{datafile}'")
     
     def handle_empty(self, df):
         '''

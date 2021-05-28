@@ -6,7 +6,7 @@ def parse_arguments():
     parser.add_argument('datafile', help='.csv file containing the data to describe')
     parser.add_argument('-f', '--full_display', help='display all rows of the describe dataframe', action='store_true')
     parser.add_argument('-s', '--save', help='save the info of describe in a csv file', action='store_true')
-    parser.add_argument('-q', '--quartile', help='Calculate additional quartiles', action = 'append', type = int)
+    parser.add_argument('-q', '--quartile', help='Calculate additional quartiles', nargs='+', type = int)
     parser.add_argument('-skw', '--skewness', help='Calculate skewness', action = 'store_true')
     parser.add_argument('-c', '--compare', help="Compare with pandas' describe output", action = 'store_true')
     args = parser.parse_args()
@@ -15,12 +15,14 @@ def parse_arguments():
         args.list_params.append("skw")
     if args.quartile != None:
         for q in args.quartile:
+            if q < 0 or q > 100:
+                print(f"WARNING: not taking in account invalid quartile {q}")
+                continue
             name = str(q) + "%"
             args.list_params.append(name)
     return (args)
 
 if __name__ == "__main__":
-     ## TODO : choices quartiles, max min et liste, exit pour msg d'erreur 
     args = parse_arguments()
     describe = Describe(args)
     if args.full_display == True:
