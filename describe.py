@@ -8,6 +8,7 @@ def parse_arguments():
     parser.add_argument('-s', '--save', help='save the info of describe in a csv file', action='store_true')
     parser.add_argument('-q', '--quartile', help='Calculate additional quartiles', action = 'append', type = int)
     parser.add_argument('-skw', '--skewness', help='Calculate skewness', action = 'store_true')
+    parser.add_argument('-c', '--compare', help="Compare with pandas' describe output", action = 'store_true')
     args = parser.parse_args()
     args.list_params = ["count", "mean", "std", "min", "25%", "50%", "75%", "max"]
     if args.skewness == True:
@@ -28,4 +29,9 @@ if __name__ == "__main__":
         print(describe.output_df)
     if args.save == True:
         describe.output_df.to_csv("describe.csv", index=False)
+    if args.compare == True:
+        import pandas as pd
+        df = pd.read_csv(args.datafile)
+        print("\n\n** Here is the decribe output from the real pandas function to compare: ** \n")
+        print(df.describe())
     

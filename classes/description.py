@@ -3,6 +3,10 @@ import numpy as np
 
 class Feature:
     def __init__(self, X, list_params):
+        '''
+        X: Vector of input
+        y: Vector for future output
+        '''
         self.X = sorted(X)
         self.y = np.zeros((len(list_params), 1))
         self.count = len(X)
@@ -38,14 +42,25 @@ class Feature:
     
 
     def calc_std(self):
-        std = ((sum((self.X - self.mean) ** 2)) / (self.count - 1)) ** 0.5
+        '''
+        Standard Deviation (ecart type): Calculates the amount of dispersion of a set of values.
+        Answers to the question : how much the values tend to be close to the mean?
+        '''
+        std = ((sum((self.X - self.mean) ** 2)) / (self.count - 1)) ** 0.5 if self.count > 1 else np.NaN
         return std
     
     def calc_skw(self):
+        '''
+        Skewness: Measures the asymmetry of the probability distribution of a real-valued random variable about its mean.
+        For example, a zero value means that the tails on both sides of the mean balance out overall.
+        '''
         skw = sum(((self.X - self.mean) / self.std) ** 3) / (self.count - 1)
         return skw
     
     def calc_percentiles(self, quartile):
+        '''
+        Percentile: It is a score below which a given percentage of scores in its frequency distribution falls.
+        '''
         position_floaty = (float(quartile) / 100) * (self.count - 1)
         min_position = int(position_floaty)
         max_position = min_position + 1
@@ -61,26 +76,48 @@ class Feature:
 
 class Describe:
     def __init__(self, args):
+        self.empty = False
         self.list_params = args.list_params
         self.read_csv(args.datafile)
-        self.init_output_df()
-        self.fill_output_df()
+        if self.empty == False:
+            self.init_output_df()
+            self.fill_output_df()
     
     def read_csv(self, datafile):
+        '''
+        Reading CSV file, keeping only columns that contain numbers in their rows
+        M: Matrix of shape (features, list_parameters)
+        '''
         try:
             df = pd.read_csv(datafile)
             self.features = list(df.select_dtypes(exclude=['object']).columns)
             self.M = df[self.features].to_numpy().T
+            if len(df) == 0:
+                self.handle_empty(df)
         except FileNotFoundError:
             print(f"No such file or directory: '{datafile}'")
         except pd.errors.EmptyDataError:
             print(f"No columns to parse from file: '{datafile}'")
-        return (None)
+    
+    def handle_empty(self, df):
+        '''
+        If the input dataframe only contains a row for columns, the output of describe is slightly different
+        '''
+        self.empty = True
+        cols = len(df.columns)
+        data = np.array([[0] * cols, [0] * cols, [np.NaN] * cols, [np.NaN] * cols])
+        self.output_df = pd.DataFrame(data = data, index = ["count", "unique", "top", "freq"], columns = df.columns)
 
     def init_output_df(self):
+        '''
+        Initializing an output dataframe with only the names for its rows
+        '''
         self.output_df = pd.DataFrame(data = None, index = self.list_params)
         
     def clear_empty_values(self, X):
+        '''
+        For each feature, droping the rows that contain empty or NaN value
+        '''
         X=X[np.logical_not(np.isnan(X))]
         return(X)
 
