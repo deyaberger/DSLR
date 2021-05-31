@@ -258,7 +258,6 @@ class LogisticRegression:
 			print(f"--> After training:\nCost = {round(self.cost, 3)}\n*average F1_score = {round(np.mean(score.F1_score), 3)}\n*average accuracy = {round(np.mean(score.accuracy), 3)}\n")
 
 			
-	
 	def save_weights(self, file_name):
 		if self.args.verbose == 1:
 			print(f"- Saving our weights, scaling info and houses name into a file called {file_name} -\n")
@@ -272,6 +271,8 @@ class LogisticRegression:
 		df.to_csv(predictions_file, index = True)
  
 	def save_predictions(self, predictions_file):
+		if self.args.verbose == 1:
+			print(f"- Saving our predictions in a file called {predictions_file} -\n")
 		predictions = []
 		for i in range(len(self.H)):
 			house = self.houses[np.argmax(self.H[i])]

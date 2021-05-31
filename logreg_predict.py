@@ -43,6 +43,8 @@ if __name__ == "__main__":
 	get_weights(structure, model)
 	model.feature_scale_normalise()
 	model.add_bias_units()
+	if args.verbose == 1:
+		print("- Predicting results -\n")
 	model.hypothesis(model.X)
 	model.save_predictions("houses.csv")
 	if args.find:
@@ -50,5 +52,3 @@ if __name__ == "__main__":
 		args.thetas = model.thetas
 		find = TestHouses(args)
 		find.launch_test()
-
-## TODO : titres plos, steps = epochs, performance en fonction epochs
