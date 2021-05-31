@@ -19,17 +19,40 @@ class PlotHistogram:
             return (1)
         elif house == "Ravenclaw":
             return (2)
-        else:
+        elif house == "Slytherin":
             return (3)
+        else :
+            print("Some students don't have a house attributed")
+            sys.exit()
+
+    def check_file(self, header):
+        house_index = -1
+        default_course = -1
+        for i, name in enumerate(header[:]):
+            if name == "Hogwarts House":
+                house_index = i
+            if name == "Arithmancy":
+                default_course = i
+        if house_index == -1:
+            print("Hogwarts House of students not found")
+            sys.exit()
+        if default_course == -1:
+            print("Arithmancy notes are not specified")
+            sys.exit()
+        return (default_course, house_index)
 
     def make_data_table(self):
         f = open(self.datafile, "r")
         self.dataset = ([], [], [], [])
         csv_reader = csv.reader(f, delimiter=',')
-        header = next(csv_reader)
+        try :
+            header = next(csv_reader)
+        except :
+            print("Deficient file")
+            sys.exit()
         exist = False
-        index = 6
-        for i in range(6,19):
+        index, index_house = self.check_file(header)
+        for i in range(len(header)):
             if header[i] == self.course:
                 exist = True
                 index = i
@@ -39,7 +62,10 @@ class PlotHistogram:
         for row in csv_reader:
             if row[index]:
                 note = float(row[index])
-                self.dataset[self.house_value(row[1])].append(note)
+                self.dataset[self.house_value(row[index_house])].append(note)
+        if self.dataset == ([], [], [], []):
+            print("File contains no data")
+            sys.exit()
 
     def show_histo(self):
         self.make_data_table()
@@ -49,4 +75,6 @@ class PlotHistogram:
         plt.hist(self.dataset, n_bins, histtype='bar', color=colors, label=labels)
         plt.legend(frameon=False, prop={'size':10})
         plt.title(f"Quel cours de Poudlard a une répartition des notes homogènes entre les quatres maisons ? {self.course}")
+        plt.xlabel(f"{self.course}'s note")
+        plt.ylabel("Number of students")
         plt.show()

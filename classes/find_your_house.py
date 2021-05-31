@@ -62,7 +62,7 @@ class TestHouses:
 		other_houses = []
 		muggle = True
 		for i in range(len(house)):
-			if house[i] > 0.7:
+			if house[i] >= 0.9:
 				muggle = False
 				if self.args.houses[i] != final_house:
 					other_houses.append(self.args.houses[i])

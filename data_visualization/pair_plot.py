@@ -4,50 +4,22 @@ import csv
 import seaborn as sns
 import sys
 import argparse
-
-START = 6
-END = 19
+from plot import ScatterPairPlot
 
 def parse_arguments():
 	parser = argparse.ArgumentParser()
 	parser.add_argument('datafile', help='.csv file containing the data to test the model', type=str)
-	parser.add_argument('-c', '--courses', help='pair plot from index to index', default="[6,19]", type=str)
+	parser.add_argument('-f', '--features', help='choose features to display on the pair plot\n\n\
+		0: Arithmancy, 1: Astronomy, 2: Herbology, 3: Defense Against the Dark Arts, 4: Divination, 5: Muggle Studies, 6: Ancient Runes, 7: History of Magic, \
+			8: Transfiguration, 9: Potions, 10: Care of Magical Creatures, 11: Charms, 12: Flying',\
+			nargs='+', default = list(range(0,13)), type=int)
 	args = parser.parse_args()
 	if not args.datafile.endswith(".csv"):
 		print("Error: Datafile must be a .csv file")
 		sys.exit()
 	return (args)
 
-def get_data(datafile, start=START, end=END):
-    f = open(datafile, "r")
-    csv_reader = csv.reader(f, delimiter=',')
-    header = next(csv_reader)
-    dataset = []
-    for row in csv_reader:
-        student = {"house": row[1]}
-        for i in range (start, end):
-            if row[i]:
-                student[header[i]] = float(row[i])
-        dataset.append(student)
-    return (dataset)
-
-def scatter_plot(datafile, x_value, y_value):
-    dataset = get_data(datafile)
-    df = pd.DataFrame(dataset)
-    sns.scatterplot(data=df, x=x_value, y=y_value, hue="house")
-    plt.show()
-
-def main():
-    args = parse_arguments()
-    if (len(sys.argv) > 2 and int(sys.argv[1]) > 0 and int(sys.argv[1]) < 13):
-        dataset = get_data(args.datafile, int(sys.argv[1]) + 6, (int)(sys.argv[2]) + 7)
-    else:
-        dataset = get_data(args.datafile)
-    df = pd.DataFrame(dataset)
-    sns.pairplot(df, hue='house')
-    plt.title("Pair plot de l'ensemble des cours de Poudlard")
-    plt.show()
-
 if __name__ == '__main__':
-    ### TODO: titres + question sur plots, label des axes, datafile en argument, parsing arguments, gestion d'erreur arguments
-    main()
+	args = parse_arguments()
+	graph = ScatterPairPlot(args)
+	graph.pair_plot()
