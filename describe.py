@@ -1,5 +1,6 @@
 from classes import Describe
 import argparse
+import sys
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
@@ -13,6 +14,9 @@ def parse_arguments():
     args.list_params = ["count", "mean", "std", "min", "25%", "50%", "75%", "max"]
     if args.skewness == True:
         args.list_params.append("skw")
+    if not args.datafile.endswith(".csv"):
+        print("The datafile should be in .csv format")
+        sys.exit()
     if args.quartile != None:
         for q in args.quartile:
             if q < 0 or q > 100:

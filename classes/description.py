@@ -102,6 +102,8 @@ class Describe:
             display_error(f"No such file or directory: '{datafile}'")
         except pd.errors.EmptyDataError:
             display_error(f"No columns to parse from file: '{datafile}'")
+        except pd.errors.ParserError as e:
+            display_error(e)
     
     def handle_empty(self, df):
         '''
