@@ -1,8 +1,13 @@
 import csv
-import matplotlib.pyplot as plt
 import sys
-import pandas as pd
-import numpy as np
+try:
+    import matplotlib.pyplot as plt
+    import pandas as pd
+    import numpy as np
+except ModuleNotFoundError as e:
+	print(e)
+	print("Please launch python -r requirements.txt")
+	sys.exit()
 
 COURSE = "Arithmancy"
 

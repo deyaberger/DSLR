@@ -1,14 +1,20 @@
-import pandas as pd
-import numpy as np
-from termcolor import colored
+try:
+	import pandas as pd
+	import numpy as np
+	from termcolor import colored
+except ModuleNotFoundError as e:
+	print(e)
+	print("Please launch python -r requirements.txt")
+	sys.exit()
 
 class TestHouses:
 
 	def __init__(self, args):
 		self.args = args
 		df = pd.read_csv(args.find)
-		self.mean = df.mean(axis=0, skipna=True)
-		self.std = df.std(axis = 0)
+		df.fillna(df.median(), inplace = True)
+		self.mean = df.mean(axis=0)
+		self.std = df.std(axis=0)
 		self.notes = [1]
 		self.features = args.features
 		self.questions = {  "Arithmancy": "How good are you at solving problems that require logical thinking ? Think math problems, enigmas and such...\n0 : your brain is not wired that way\n10 : you have a nobel prize in Mathematics\n",\

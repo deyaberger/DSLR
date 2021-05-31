@@ -1,5 +1,10 @@
-import pandas as pd
-import numpy as np
+try:
+    import pandas as pd
+    import numpy as np
+except ModuleNotFoundError as e:
+	print(e)
+	print("Please launch python -r requirements.txt")
+	sys.exit()
 import sys
 
 def display_error(msg):

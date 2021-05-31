@@ -1,5 +1,10 @@
 from classes import Describe
-import argparse
+try:
+    import argparse
+except ModuleNotFoundError as e:
+	print(e)
+	print("Please launch python -r requirements.txt")
+	sys.exit()
 import sys
 
 def parse_arguments():

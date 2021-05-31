@@ -1,7 +1,3 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-import csv
-import seaborn as sns
 import sys
 import argparse
 from plot import ScatterPairPlot

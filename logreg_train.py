@@ -1,6 +1,11 @@
 from classes import LogisticRegression, ModelEvaluation
-import argparse
-import matplotlib.pyplot as plt
+try:
+    import argparse
+    import matplotlib.pyplot as plt
+except ModuleNotFoundError as e:
+	print(e)
+	print("Please launch python -r requirements.txt")
+	sys.exit()
 import sys
 
 def display_error(msg):
