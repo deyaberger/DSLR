@@ -1,4 +1,5 @@
 from classes import LogisticRegression, ModelEvaluation
+import sys
 try:
     import argparse
     import matplotlib.pyplot as plt
@@ -6,7 +7,6 @@ except ModuleNotFoundError as e:
 	print(e)
 	print("Please launch python -r requirements.txt")
 	sys.exit()
-import sys
 
 def display_error(msg):
 	print(msg)
@@ -50,6 +50,4 @@ if __name__ == "__main__":
 		score.show_graph("F1_score", list(range(len(score.F1_score_total))), score.F1_score_total, 1)
 		score.show_graph("Cost Evolution", list(range(len(model.total_cost))), model.total_cost, 2)
 		model.display_weights()
-		plt.show()
-	### TODO: gestion d'erreur
- 
+		plt.show() 

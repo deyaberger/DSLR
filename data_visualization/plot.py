@@ -1,12 +1,12 @@
+import sys
 try:
     import pandas as pd
     import matplotlib.pyplot as plt
     import seaborn as sns
 except ModuleNotFoundError as e:
 	print(e)
-	print("Please launch python -r requirements.txt")
+	print("Please launch 'python -r requirements.txt'")
 	sys.exit()
-import sys
 
 class ScatterPairPlot:
 

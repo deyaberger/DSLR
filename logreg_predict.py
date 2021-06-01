@@ -1,4 +1,5 @@
 from classes import LogisticRegression, ModelEvaluation, TestHouses
+import sys
 try:
     import argparse
     import pickle
@@ -6,7 +7,6 @@ except ModuleNotFoundError as e:
 	print(e)
 	print("Please launch python -r requirements.txt")
 	sys.exit()
-import sys
 
 def display_error(msg):
 	print(msg)
