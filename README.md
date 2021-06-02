@@ -1,9 +1,14 @@
 # DSLR
 
 ## Prerequisit:
-apt-get install python3</br>
-pip install -r requirements.txt
-cd src
+If you do not have python3, run:</br>
+```apt-get install python3```</br>
+To create a virtual environment, run:</br>
+```python3 -m venv [your_env_name]```</br>
+Then: ```source [your_env_name]/bin/activate```</br>
+Finally:
+```pip install -r requirements.txt```</br>
+```cd src```</br>
 
 ## I. Data Analysis
 Run ```python3 describe.py [a_dataset.csv]``` to get the description of a dataset. </br>Use ```-h``` to display the usage and the options
@@ -23,4 +28,3 @@ Use ```-h``` to display the usage and the options for the following functions:
 1. Run ```python3 logreg_train.py ../datasets/dataset_train.csv``` to train the model. It should creates a file called "weights.pkl" that will be used in the prediction program.</br>
 
 2. Run ```python3 logreg_predict.py ../datasets/dataset_test.csv weights.pkl``` to predict the houses for students of the test dataset. It should create a csv file called "house.csv" where all the predictions are saved.</br>
-
