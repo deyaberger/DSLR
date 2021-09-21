@@ -28,3 +28,8 @@ Use ```-h``` to display the usage and the options for the following functions:
 1. Run ```python3 logreg_train.py ../datasets/dataset_train.csv``` to train the model. It should creates a file called "weights.pkl" that will be used in the prediction program.</br>
 
 2. Run ```python3 logreg_predict.py ../datasets/dataset_test.csv weights.pkl``` to predict the houses for students of the test dataset. It should create a csv file called "house.csv" where all the predictions are saved.</br>
+
+## Visual examples:
+![](images/cost.png)
+![](images/weights.png)
+![](images/f1.png)
