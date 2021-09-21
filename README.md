@@ -1,5 +1,7 @@
 # DSLR
 
+Goal: Implement a logistic regression on a given dataset (cf subject_dslr.pdf)
+
 ## Prerequisit:
 If you do not have python3, run:</br>
 ```apt-get install python3```</br>
